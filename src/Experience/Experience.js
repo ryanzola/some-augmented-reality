@@ -9,6 +9,7 @@ import Camera from './Camera.js'
 import World from './World.js'
 
 import assets from './assets.js'
+import XR from './XR';
 
 export default class Experience
 {
@@ -31,6 +32,7 @@ export default class Experience
         this.setScene()
         this.setCamera()
         this.setRenderer()
+        this.setXR()
         this.setResources()
         this.setWorld()
         
@@ -83,6 +85,10 @@ export default class Experience
         this.targetElement.appendChild(this.renderer.instance.domElement)
     }
 
+    setXR() {
+        this.xr = new XR()
+    }
+
     setResources()
     {
         this.resources = new Resources(assets)
@@ -106,10 +112,15 @@ export default class Experience
         if(this.renderer)
             this.renderer.update()
 
-        window.requestAnimationFrame(() =>
-        {
-            this.update()
-        })
+        if(this.xr)
+            this.xr.update()
+
+        this.renderer.instance.setAnimationLoop(this.update.bind(this))
+
+        // window.requestAnimationFrame(() =>
+        // {
+        //     this.update()
+        // })
     }
 
     resize()
